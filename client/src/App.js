@@ -10,6 +10,7 @@ class App extends Component {
     super();
     this.state = {
         articles: [],
+        archived: []
     }
   }
 
@@ -21,7 +22,8 @@ class App extends Component {
       })
       .then(data => {
         console.log(data);
-        this.setState({ articles: data });
+        this.setState({ articles: data.headlines });
+        this.setState({ archived: data.archived });
       });
   }
 
@@ -31,7 +33,7 @@ class App extends Component {
       <Switch>
         <Route exact path='/' component={LandingPage}/>
         {<Route path='/headlines' render={(props) => (<Headlines articles={this.state.articles}/>)}/>}
-        <Route path='/archives' component={Archives}/>
+        {<Route path='/archives' render={(props) => (<Archives archived={this.state.archived}/>)}/>}
       </Switch>
       </div>
     );

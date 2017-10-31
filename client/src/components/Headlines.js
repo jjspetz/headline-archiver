@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from './Header';
+import axios from 'axios'
 // import './Headlines.css';
 
 class Headlines extends Component {
@@ -18,15 +19,22 @@ class Headlines extends Component {
       })
       .then(data => {
         console.log(data);
-        this.setState({ articles: data });
+        this.setState({ articles: data.headlines });
       });
   }
 
-  remove = (a) => {
-    console.log(this.state.articles.indexOf(a))
-    this.state.articles.splice(this.state.articles.indexOf(a), 1);
+  remove = (article) => {
+    // console.log(this.state.articles.indexOf(article))
+    this.state.articles.splice(this.state.articles.indexOf(article), 1);
     this.setState({ articles: this.state.articles });
-    // console.log('removed pressed ' + a)
+  }
+
+  addArchive = (article) => {
+    // console.log(this.state.articles.indexOf(article))
+    axios.post('/archive/' + article.title, article)
+           .catch(err => {
+               console.log(err);
+           })
   }
 
   render() {
@@ -35,11 +43,11 @@ class Headlines extends Component {
           <Header/>
           {(this.state.articles).map((article) =>
             <div key={article.title}>
-              <a href={article.link}>
+              <a href={article.link} target='_blank'>
                 <h4> {article.title} </h4>
                 <p> {article.summary} </p>
               </a>
-              <button>
+              <button onClick={() => this.addArchive(article)}>
                 Save
               </button>
               <button onClick={() => this.remove(article)}>
